@@ -1,0 +1,12 @@
+[submodule "kernel"]
+	path = kernel
+	url = https://github.com/NotYetOS/kernel.git
+[submodule "fefs"]
+	path = fefs
+	url = https://github.com/NotYetOS/fefs.git
+[submodule "fefs-tool"]
+	path = fefs-tool
+	url = https://github.com/NotYetOS/fefs-tool.git
+[submodule "user"]
+	path = user
+	url = https://github.com/NotYetOS/user.git
