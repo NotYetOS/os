@@ -10,12 +10,12 @@ FS_IMG = fefs-tool/fs.img
 build: 
 ifeq ($(MODE), debug)
 	@cd kernel && cargo build
-	@cd fefs-tool && cargo run
 	@cd user && cargo build
+	@cd fefs-tool && cargo run
 else
 	@cd kernel cargo build --release
-	@cd fefs-tool && cargo run --release
 	@cd user && cargo build --release
+	@cd fefs-tool && cargo run --release
 endif
 
 to_bin: build
