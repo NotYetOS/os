@@ -13,7 +13,7 @@ ifeq ($(MODE), debug)
 	@cd user && cargo build
 	@cd fefs-tool && cargo run
 else
-	@cd kernel cargo build --release
+	@cd kernel && cargo build --release
 	@cd user && cargo build --release
 	@cd fefs-tool && cargo run --release
 endif
@@ -30,6 +30,15 @@ run: to_bin
 		-drive file=$(FS_IMG),if=none,format=raw,id=x0 \
         -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
+qemu_server: to_bin
+	@qemu-system-riscv64 \
+		-machine virt \
+		-nographic \
+		-bios $(BOOTLOADER) \
+		-device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY) \
+		-drive file=$(FS_IMG),if=none,format=raw,id=x0 \
+        -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0 -s -S
+
 debug: to_bin
 	@tmux new-session -d \
 		"qemu-system-riscv64 \
@@ -38,6 +47,6 @@ debug: to_bin
 		-bios $(BOOTLOADER) \
 		-device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY) \
 		-drive file=$(FS_IMG),if=none,format=raw,id=x0 \
-        -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0 -s -S" && \
-		tmux split-window -h "riscv64-unknown-elf-gdb -ex 'file $(KERNEL_ELF)' -ex 'set arch riscv:rv64' -ex 'target remote localhost:1234'" && \
+        -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0 -s -S"
+	@tmux split-window -h "riscv64-unknown-elf-gdb -ex 'file $(KERNEL_ELF)' -ex 'set arch riscv:rv64' -ex 'target remote localhost:1234'" && \
 		tmux -2 attach-session -d
