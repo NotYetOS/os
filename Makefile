@@ -1,6 +1,6 @@
 # make is good，ninja??？
 MODE := debug
-TARGET := riscv64gc-unknown-none-elf
+TARGET := riscv64imac-unknown-none-elf
 KERNEL_ELF := kernel/target/$(TARGET)/$(MODE)/kernel
 KERNEL_BIN := kernel/kernel.bin
 KERNEL_ENTRY := 0x80200000
