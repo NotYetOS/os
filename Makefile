@@ -12,7 +12,9 @@ clean:
 	@rm -rf $(KERNEL_BIN)
 	@rm -rf user/target
 	@rm -rf fefs-tool/target
+	@rm -rf fefs/target
 	@rm -rf $(FS_IMG)
+
 build: 
 ifeq ($(MODE), debug)
 	@cd kernel && cargo build
