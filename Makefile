@@ -1,5 +1,5 @@
 # make is good，ninja??？
-MODE := debug
+MODE := release
 TARGET := riscv64gc-unknown-none-elf
 KERNEL_ELF := kernel/target/$(TARGET)/$(MODE)/kernel
 KERNEL_BIN := kernel/kernel.bin
