@@ -4,8 +4,9 @@ TARGET := riscv64gc-unknown-none-elf
 KERNEL_ELF := kernel/target/$(TARGET)/$(MODE)/kernel
 KERNEL_BIN := kernel/kernel.bin
 KERNEL_ENTRY := 0x80200000
-BOOTLOADER = bootloader/rustsbi-qemu.bin
+BOOTLOADER = bootloader/fw_payload.bin
 FS_IMG = fefs-tool/fs.img
+NUM_HART = 8
 
 clean:
 	@rm -rf kernel/target
@@ -17,11 +18,11 @@ clean:
 
 build: 
 ifeq ($(MODE), debug)
-	@cd kernel && cargo build
+	@cd kernel && cargo build --no-default-features --features $(NUM_HART)t
 	@cd user && cargo build
 	@cd fefs-tool && cargo run
 else
-	@cd kernel && cargo build --release
+	@cd kernel && cargo build --release --no-default-features --features $(NUM_HART)t
 	@cd user && cargo build --release
 	@cd fefs-tool && cargo run --release
 endif
@@ -32,6 +33,7 @@ to_bin: build
 run: to_bin
 	@qemu-system-riscv64 \
 		-machine virt \
+		-smp $(NUM_HART) \
 		-nographic \
 		-bios $(BOOTLOADER) \
 		-device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY) \
@@ -41,6 +43,7 @@ run: to_bin
 qemu_server: to_bin
 	@qemu-system-riscv64 \
 		-machine virt \
+		-smp $(NUM_HART) \
 		-nographic \
 		-bios $(BOOTLOADER) \
 		-device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY) \
@@ -51,6 +54,7 @@ debug: to_bin
 	@tmux new-session -d \
 		"qemu-system-riscv64 \
 		-machine virt \
+		-smp $(NUM_HART) \
 		-nographic \
 		-bios $(BOOTLOADER) \
 		-device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY) \
