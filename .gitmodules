@@ -10,3 +10,7 @@
 [submodule "user"]
 	path = user
 	url = https://github.com/NotYetOS/user.git
+[submodule "net"]
+	path = net
+	url = https://github.com/NotYetOS/net.git
+	
